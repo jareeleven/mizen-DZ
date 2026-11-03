@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-arabic), var(--font-inter), sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
+  --radius-3xl: calc(var(--radius) * 2.5);
+}
+
+:root {
+  color-scheme: dark;
+  --radius: 0.75rem;
+  --background: #0b1120;
+  --foreground: #f0f4f8;
+  --card: rgba(255, 255, 255, 0.07);
+  --card-foreground: #f0f4f8;
+  --popover: #111a2e;
+  --popover-foreground: #f0f4f8;
+  --primary: #0a84ff;
+  --primary-foreground: #ffffff;
+  --secondary: rgba(255, 255, 255, 0.1);
+  --secondary-foreground: #f0f4f8;
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: #8b98ad;
+  --accent: rgba(10, 132, 255, 0.14);
+  --accent-foreground: #7cc0ff;
+  --destructive: #ff5c5c;
+  --success: #00c853;
+  --warning: #ffb020;
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #0a84ff;
+  --glass: rgba(255, 255, 255, 0.07);
+  --glass-strong: rgba(255, 255, 255, 0.11);
+  --chart-1: #0a84ff;
+  --chart-2: #00c853;
+  --chart-3: #ffb020;
+  --chart-4: #ff5c5c;
+  --chart-5: #8b98ad;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    background-image:
+      radial-gradient(60rem 40rem at 10% -10%, rgba(10, 132, 255, 0.16), transparent 60%),
+      radial-gradient(50rem 35rem at 100% 0%, rgba(0, 200, 83, 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  [lang='ar'] {
+    font-family: var(--font-arabic);
+  }
+}
+
+@utility glass {
+  background-color: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+@utility glass-strong {
+  background-color: var(--glass-strong);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+
+@utility glow-primary {
+  box-shadow: 0 0 0 1px rgba(10, 132, 255, 0.4), 0 8px 32px -8px rgba(10, 132, 255, 0.55);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
