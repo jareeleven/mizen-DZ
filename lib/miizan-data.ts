@@ -199,3 +199,61 @@ export const pendingPrices: PendingPrice[] = [
 export function getPending(id: string) {
   return pendingPrices.find((p) => p.id === id)
 }
+// === Gestion dynamique (admin) ===
+
+export type SeasonType = 'normale' | 'haute' | 'basse' | 'evenement'
+
+export type Season = {
+  id: string
+  name: string
+  type: SeasonType
+  /** Multiplicateur appliqué au prix producteur (ex: 1.15 = +15 %) */
+  coefficient: number
+  active: boolean
+  note?: string
+}
+
+export const seasons: Season[] = [
+  {
+    id: 's-normale',
+    name: 'Saison normale',
+    type: 'normale',
+    coefficient: 1,
+    active: true,
+    note: 'Aucun ajustement',
+  },
+  {
+    id: 's-haute',
+    name: 'Haute saison',
+    type: 'haute',
+    coefficient: 1.12,
+    active: false,
+    note: 'Demande forte / rareté relative',
+  },
+  {
+    id: 's-basse',
+    name: 'Basse saison',
+    type: 'basse',
+    coefficient: 0.92,
+    active: false,
+    note: 'Offre abondante',
+  },
+  {
+    id: 's-ramadan',
+    name: 'Ramadan',
+    type: 'evenement',
+    coefficient: 1.08,
+    active: false,
+    note: 'Événement religieux — pression sur certains produits',
+  },
+]
+
+export function getActiveSeason() {
+  return seasons.find((s) => s.active) ?? seasons[0]
+}
+
+/** Prix producteur ajusté par la saison active */
+export function seasonalProducerPrice(base: number) {
+  const season = getActiveSeason()
+  return Math.round(base * season.coefficient)
+}
