@@ -153,10 +153,16 @@ export function computePrice(
 export function priceFor(product: Product, wilayaCode: number): PriceBreakdown {
   const wilaya = getWilaya(wilayaCode)
   const transport = transportFor(product, wilaya)
-  const computed = computePrice(product.producerPrice, transport)
+  const producer = seasonalProducerPrice(product.producerPrice)
+  const computed = computePrice(producer, transport)
   const h = product.history
   const weeklyChange = ((h[h.length - 1] - h[h.length - 2]) / h[h.length - 2]) * 100
-  return { producer: product.producerPrice, transport, ...computed, weeklyChange }
+  return {
+    producer,
+    transport,
+    ...computed,
+    weeklyChange,
+  }
 }
 
 export function formatDA(value: number) {
@@ -199,7 +205,8 @@ export const pendingPrices: PendingPrice[] = [
 export function getPending(id: string) {
   return pendingPrices.find((p) => p.id === id)
 }
-// === Gestion dynamique (admin) ===
+
+// === Saisons & événements ===
 
 export type SeasonType = 'normale' | 'haute' | 'basse' | 'evenement'
 
