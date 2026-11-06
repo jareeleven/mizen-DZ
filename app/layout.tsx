@@ -5,13 +5,22 @@ import { SiteFooter } from '@/components/miizan/site-footer'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const notoArabic = Noto_Sans_Arabic({ subsets: ['arabic'], variable: '--font-arabic' })
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ['arabic'],
+  variable: '--font-arabic',
+})
 
 export const metadata: Metadata = {
   title: 'MIIZAN — Prix justes des produits agricoles en Algérie',
   description:
     'Plateforme officielle des prix équitables des produits agricoles et agroalimentaires par wilaya : prix producteur, gros et détail recommandé.',
   generator: 'v0.app',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'MIIZAN',
+  },
 }
 
 export const viewport: Viewport = {
