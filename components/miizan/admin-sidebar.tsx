@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
+  Calendar,
   ClipboardCheck,
   Globe,
   LayoutDashboard,
@@ -25,10 +26,14 @@ const items = [
     match: '/admin/validation',
   },
   {
-    href: '/admin',
+    href: '/admin/produits',
     label: 'Produits & catégories',
     icon: Package,
-    disabled: true,
+  },
+  {
+    href: '/admin/saisons',
+    label: 'Saisons & événements',
+    icon: Calendar,
   },
   {
     href: '/admin',
@@ -54,7 +59,7 @@ export function AdminSidebar() {
         {items.map((item) => {
           const active = item.match
             ? pathname.startsWith(item.match)
-            : pathname === item.href && item.href === '/admin' && !item.disabled
+            : pathname === item.href && !item.disabled
 
           return (
             <Link
@@ -80,7 +85,6 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      {/* Profil admin */}
       <div className="mt-auto flex items-center gap-3 rounded-xl bg-white/4 p-3">
         <span className="flex size-9 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-accent-foreground">
           KB
