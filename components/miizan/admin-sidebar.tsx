@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Calendar,
   ClipboardCheck,
   Globe,
   LayoutDashboard,
+  LogOut,
   Package,
   Settings,
 } from 'lucide-react'
@@ -50,6 +51,15 @@ const items = [
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  function handleLogout() {
+    localStorage.removeItem('miizan_admin')
+    router.push('/admin/login')
+  }
+
+  // Ne pas afficher la sidebar sur la page login
+  if (pathname === '/admin/login') return null
 
   return (
     <aside className="glass sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-8 rounded-none border-y-0 border-l-0 p-5 lg:flex">
@@ -85,16 +95,27 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="mt-auto flex items-center gap-3 rounded-xl bg-white/4 p-3">
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-accent-foreground">
-          KB
-        </span>
-        <div className="min-w-0 text-sm">
-          <p className="truncate font-medium">Karim Benali</p>
-          <p className="truncate text-xs text-muted-foreground">
-            Contrôleur national
-          </p>
+      <div className="mt-auto flex flex-col gap-3">
+        <div className="flex items-center gap-3 rounded-xl bg-white/4 p-3">
+          <span className="flex size-9 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-accent-foreground">
+            KB
+          </span>
+          <div className="min-w-0 text-sm">
+            <p className="truncate font-medium">Karim Benali</p>
+            <p className="truncate text-xs text-muted-foreground">
+              Contrôleur national
+            </p>
+          </div>
         </div>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/6 hover:text-foreground"
+        >
+          <LogOut className="size-4" aria-hidden="true" />
+          Déconnexion
+        </button>
       </div>
     </aside>
   )
