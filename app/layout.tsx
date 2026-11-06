@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Noto_Sans_Arabic } from 'next/font/google'
+import { SiteFooter } from '@/components/miizan/site-footer'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -25,8 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${inter.variable} ${notoArabic.variable} dark`}>
-      <body className="min-h-dvh antialiased">
-        {children}
+      <body className="flex min-h-dvh flex-col antialiased">
+        <div className="flex-1">{children}</div>
+        <SiteFooter />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
