@@ -1,7 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Factory, Info, Store, Truck, Warehouse } from 'lucide-react'
+import {
+  ArrowLeft,
+  Factory,
+  Info,
+  ShieldCheck,
+  Store,
+  Truck,
+  Warehouse,
+} from 'lucide-react'
 import { SiteHeader } from '@/components/miizan/site-header'
 import { ChangeBadge } from '@/components/miizan/change-badge'
 import { PriceChart } from '@/components/miizan/price-chart'
@@ -25,7 +33,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const product = getProduct(slug)
-  return { title: product ? `${product.nameFr} — Prix juste | MIIZAN` : 'Produit | MIIZAN' }
+  return {
+    title: product ? `${product.nameFr} — Prix juste | MIIZAN` : 'Produit | MIIZAN',
+  }
 }
 
 export default async function ProductPage({
@@ -42,25 +52,43 @@ export default async function ProductPage({
   const wilaya = getWilaya(Number(w) || DEFAULT_WILAYA)
   const price = priceFor(product, wilaya.code)
   const ratio = wilaya.transport / 4
-  const chartData = product.history.map((v, i) => ({ week: `S${i + 1}`, price: Math.round(v * (0.97 + ratio * 0.03)) }))
+  const chartData = product.history.map((v, i) => ({
+    week: `S${i + 1}`,
+    price: Math.round(v * (0.97 + ratio * 0.03)),
+  }))
 
   return (
     <>
       <SiteHeader wilaya={wilaya.code} />
+
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-6 md:px-8 md:pt-10">
-        <Link href={`/?w=${wilaya.code}`} className="mb-6 inline-flex items-center gap-2 rounded-lg text-sm text-muted-foreground transition-colors hover:text-foreground">
+        {/* Retour */}
+        <Link
+          href={`/?w=${wilaya.code}`}
+          className="mb-6 inline-flex items-center gap-2 rounded-lg text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
           <ArrowLeft className="size-4" aria-hidden="true" />
           Tous les produits
         </Link>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10">
+          {/* Colonne gauche : photo + signalement */}
           <section className="flex flex-col gap-5">
             <div className="glass relative aspect-square overflow-hidden rounded-3xl">
-              <Image src={product.image || '/placeholder.svg'} alt={product.nameFr} fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/90 to-transparent" />
+              <Image
+                src={product.image || '/placeholder.svg'}
+                alt={product.nameFr}
+                fill
+                priority
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/95 to-transparent" />
               <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{product.nameFr}</h1>
+                  <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+                    {product.nameFr}
+                  </h1>
                   <p lang="ar" dir="rtl" className="mt-1 text-left text-xl text-muted-foreground">
                     {product.nameAr}
                   </p>
@@ -70,14 +98,25 @@ export default async function ProductPage({
                 </span>
               </div>
             </div>
+
+            {/* Signalement (desktop) */}
             <div className="hidden lg:block">
-              <ReportGap productName={product.nameFr} recommended={price.retail} unit={product.unit} />
+              <ReportGap
+                productName={product.nameFr}
+                recommended={price.retail}
+                unit={product.unit}
+              />
             </div>
           </section>
 
+          {/* Colonne droite : prix */}
           <section className="flex flex-col gap-5" aria-label="Détail des prix">
+            {/* Prix détail principal */}
             <div className="glass-strong relative overflow-hidden rounded-3xl p-6 md:p-8">
-              <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-primary/30 blur-3xl" />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-primary/25 blur-3xl"
+              />
               <div className="relative flex flex-col gap-4">
                 <div className="flex items-center justify-between gap-3">
                   <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-accent-foreground">
@@ -86,10 +125,17 @@ export default async function ProductPage({
                   </span>
                   <ChangeBadge value={price.weeklyChange} />
                 </div>
+
                 <p className="flex items-baseline gap-2">
-                  <span className="text-6xl font-bold leading-none tracking-tighter tabular-nums md:text-7xl">{formatDA(price.retail)}</span>
-                  <span className="text-lg font-medium text-muted-foreground">DA/{product.unit}</span>
+                  <span className="text-6xl font-bold leading-none tracking-tighter tabular-nums md:text-7xl">
+                    {formatDA(price.retail)}
+                  </span>
+                  <span className="text-lg font-medium text-muted-foreground">
+                    DA/{product.unit}
+                  </span>
                 </p>
+
+                {/* Fourchette */}
                 <div className="flex flex-col gap-2">
                   <div className="relative h-2 rounded-full bg-white/8">
                     <div className="absolute inset-y-0 left-[15%] right-[15%] rounded-full bg-gradient-to-r from-success/70 via-primary to-warning/70" />
@@ -104,30 +150,87 @@ export default async function ProductPage({
               </div>
             </div>
 
+            {/* Les 3 niveaux de prix */}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <PriceBlock icon={Factory} label="Prix producteur" value={price.producer} unit={product.unit} note="Sortie ferme" />
-              <PriceBlock icon={Warehouse} label="Prix gros" value={price.wholesale} unit={product.unit} note={`Transport ${price.transport} DA + marge ${WHOLESALE_MARGIN * 100} %`} />
-              <PriceBlock icon={Store} label="Prix détail" value={price.retail} unit={product.unit} note={`Marge détaillant ${RETAIL_MARGIN * 100} %`} highlight />
+              <PriceBlock
+                icon={Factory}
+                label="Prix producteur"
+                value={price.producer}
+                unit={product.unit}
+                note="Sortie ferme / usine"
+              />
+              <PriceBlock
+                icon={Warehouse}
+                label="Prix gros"
+                value={price.wholesale}
+                unit={product.unit}
+                note={`Transport ${price.transport} DA + marge ${WHOLESALE_MARGIN * 100} %`}
+              />
+              <PriceBlock
+                icon={Store}
+                label="Prix détail"
+                value={price.retail}
+                unit={product.unit}
+                note={`Marge détaillant ${RETAIL_MARGIN * 100} %`}
+                highlight
+              />
             </div>
 
+            {/* Explication du calcul */}
+            <div className="glass rounded-2xl p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+                <h2 className="font-semibold">Comment est calculé ce prix ?</h2>
+              </div>
+              <ul className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+                <li>
+                  <span className="font-medium text-foreground">1. Prix producteur</span> —  
+                  prix payé à l’agriculteur ou à l’usine.
+                </li>
+                <li>
+                  <span className="font-medium text-foreground">2. Transport</span> —  
+                  coût réel vers {wilaya.name} ({price.transport} DA/{product.unit}).
+                </li>
+                <li>
+                  <span className="font-medium text-foreground">3. Marges raisonnables</span> —  
+                  gros ({WHOLESALE_MARGIN * 100} %) + détail ({RETAIL_MARGIN * 100} %).
+                </li>
+              </ul>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Objectif : protéger le revenu de l’agriculteur et le pouvoir d’achat du citoyen.
+              </p>
+            </div>
+
+            {/* Graphique */}
             <div className="glass rounded-3xl p-5 md:p-6">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-semibold">Évolution sur 8 semaines</h2>
-                <span className="text-xs text-muted-foreground">Prix détail · {wilaya.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  Prix détail · {wilaya.name}
+                </span>
               </div>
               <PriceChart data={chartData} unit={product.unit} />
             </div>
 
+            {/* Note transport */}
             <div className="flex items-start gap-3 rounded-2xl border border-white/6 bg-white/3 p-4 text-sm text-muted-foreground">
               <Truck className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
               <p>
-                Le prix tient compte du coût de transport vers {wilaya.name} ({price.transport} DA/{product.unit}). Mis à jour le {LAST_UPDATE}.
+                Le prix tient compte du coût de transport vers{' '}
+                <span className="font-medium text-foreground">{wilaya.name}</span> (
+                {price.transport} DA/{product.unit}).  
+                Dernière mise à jour : {LAST_UPDATE}.
               </p>
-              <Info className="ml-auto size-4 shrink-0" aria-hidden="true" />
+              <Info className="ml-auto size-4 shrink-0 opacity-60" aria-hidden="true" />
             </div>
 
+            {/* Signalement (mobile) */}
             <div className="lg:hidden">
-              <ReportGap productName={product.nameFr} recommended={price.retail} unit={product.unit} />
+              <ReportGap
+                productName={product.nameFr}
+                recommended={price.retail}
+                unit={product.unit}
+              />
             </div>
           </section>
         </div>
@@ -152,7 +255,13 @@ function PriceBlock({
   highlight?: boolean
 }) {
   return (
-    <div className={highlight ? 'glass rounded-2xl border-primary/40 bg-primary/10 p-4' : 'glass rounded-2xl p-4'}>
+    <div
+      className={
+        highlight
+          ? 'glass rounded-2xl border-primary/40 bg-primary/10 p-4'
+          : 'glass rounded-2xl p-4'
+      }
+    >
       <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
         <Icon className={highlight ? 'size-4 text-primary' : 'size-4'} aria-hidden="true" />
         {label}
