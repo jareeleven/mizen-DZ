@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
@@ -19,16 +18,21 @@ export function Logo({
         className,
       )}
     >
-      <span className="relative flex size-10 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/15 shadow-[0_6px_20px_-6px_rgba(0,0,0,0.6)] transition-transform group-hover:scale-[1.03]">
-        <Image
-          src="/icons/icon-512.png"
-          alt="MIIZAN"
-          width={40}
-          height={40}
-          className="object-cover"
-          priority
-        />
-      </span>
+      <img
+        src="/icons/icon-512.png"
+        alt="MIIZAN"
+        width={44}
+        height={44}
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: 12,
+          objectFit: 'cover',
+          display: 'block',
+          flexShrink: 0,
+          backgroundColor: '#000',
+        }}
+      />
       <span className="flex flex-col leading-none">
         <span className="text-[15px] font-semibold tracking-[0.18em] text-foreground">
           MIIZAN
